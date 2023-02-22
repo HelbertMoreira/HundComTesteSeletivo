@@ -1,4 +1,4 @@
-﻿@model HundCom_Postagem.Models.Entities.Topico
+﻿@model HundCom_Postagem.Data.Dtos.Comments.CreateCommentDto
 
 @{
     ViewData["Title"] = "Create";
@@ -6,17 +6,18 @@
 
 <h1>Create</h1>
 
-<h4>Topico</h4>
+<h4>Comentario</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="postagemId" />
             <div class="form-group">
-                <label asp-for="Tema" class="control-label"></label>
-                <input asp-for="Tema" class="form-control" />
-                <span asp-validation-for="Tema" class="text-danger"></span>
-            </div>
+                <label asp-for="Conteudo" class="control-label"></label>
+                <input asp-for="Conteudo" class="form-control" />
+                <span asp-validation-for="Conteudo" class="text-danger"></span>
+            </div>                    
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

@@ -1,4 +1,5 @@
 ﻿using HundCom_Postagem.Models;
+using HundCom_Postagem.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,15 +8,17 @@ namespace HundCom_Postagem.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ITopicoServices _topicoServices;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ITopicoServices topicoServices)
         {
             _logger = logger;
+            _topicoServices = topicoServices;
         }
 
         public IActionResult Index()
         {
-            return View();
+            return View(_topicoServices.ListarTodosOsTopicosCadastrados());
         }
 
         public IActionResult Privacy()

@@ -2,10 +2,12 @@
 
 namespace HundCom_Postagem.Data.Dtos.Topics
 {
-    public class CreateTopcDto
+    public class UpdateTopcDto
     {
-        [Key]
+        [Required]
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "O nome para o tópico é obrigatório")]
-        public string Name { get; set; }
+        public string Tema { get; set; }
     }
 }

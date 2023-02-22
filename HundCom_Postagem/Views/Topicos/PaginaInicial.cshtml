@@ -1,0 +1,58 @@
+﻿@model IEnumerable<HundCom_Postagem.Data.Dtos.Topics.ReadTopcDto>
+
+@{
+    ViewData["Title"] = "Topicos";
+}
+<div class="row" style="margin-top:60px; text-align:center">
+    <h1>HANCOM - TÓPICOS CADASTRADOS</h1>
+    <br />
+</div>
+
+<div class="form-group" style="margin-top:60px;">
+    <form asp-controller="Topicos" asp-action="BuscarTopicoPorNome" method="get">
+        <input class="form-group btn-group" type="text" name="searchTopico" placeholder="Buscar..." style="width:40%;">
+        <span class="form-group">
+            <input class="form-group btn btn-success btn-sm"
+                   type="submit"
+                   value="Buscar"
+                   name="searchTopico" />
+        </span> |
+        <a class="form-group btn btn-primary btn-sm" asp-area="" asp-controller="Topicos" asp-action="PaginaInicial">Listar Todos</a>
+    </form>
+</div>
+
+<div class="form-group" style="margin-top:50px;">
+    <div class="form-group">
+        <a type="submit" class="btn btn-success btn-sm" asp-area="" asp-controller="Topicos" asp-action="AdicionarTopico">Adicionar novo tópico</a>
+        <br />
+    </div>
+    <div class="form-group" style="margin-top:20px;">
+        @foreach (var item in Model)
+        {            
+            <div class="card">
+                <div class="card-header">
+                    <h5>@Html.DisplayFor(modelItem => item.Tema)  -  </h5>
+                    <a type="submit" asp-controller="Postagens" asp-route-id="@item.Id" asp-action="PaginaInicial">
+                        Ver postagens de @Html.DisplayFor(modelItem => item.Tema)
+                    </a>
+                </div>
+                <div class="card-body"> 
+                    @foreach (var post in item.ListaPostagem)
+                    {
+                        <p>                            
+                            @Html.DisplayFor(modelItem => post.Titulo)
+                            <br>
+                        <p style="color:darkblue">
+                                @Html.DisplayFor(modelItem => post.Conteudo)
+                        </p>
+
+                        <hr>
+                        </p>
+                    }                    
+                    <a class="btn btn-danger" asp-area="" asp-route-id="@item.Id" asp-controller="Topicos" asp-action="DeletarTopico">Excluir este topico...</a>
+                </div>
+            </div>
+            <br />
+        }
+    </div>
+</div>

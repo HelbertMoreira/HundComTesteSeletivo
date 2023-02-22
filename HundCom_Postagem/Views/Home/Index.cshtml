@@ -1,8 +1,66 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model IEnumerable<HundCom_Postagem.Data.Dtos.Topics.ReadTopcDto>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+<div class="row" style="text-align:center; margin-top:30%;">
+    <h1>HANDCOM</h1>
+    <br />
 </div>
+
+
+@*
+
+<div class="form-group" style="margin-top:60px;  justify-content:space-around">
+    <form asp-controller="Topicos" asp-action="BuscarTopicoPorNome" method="get">
+    <input type="submit" class="form-group" value="Adicionar" asp-area="" asp-controller="Topicos" asp-action="AdicionarTopico" style="position:initial"/>
+    <input class="form-group" type="text" name="searchTopico" placeholder="Buscar..." style="width:40%;">
+    <span class="form-group">
+    <input class="form-group"
+    type="submit"
+    value="Buscar"
+    name="searchTopico" />
+    </span>
+    </form>
+</div>
+
+<div class="row" style="margin-top:60px;">
+    <form>
+        @foreach (var item in Model)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <h3>@Html.DisplayFor(modelItem => item.Tema)</h3>                    
+                    <p>
+                        <h5>Veja o que as pessoas estão postando sobre este tópico,</h5>
+                        <br>
+                        @foreach (var post in item.ListaPostagem)
+                        {
+                        <p>
+                            <strong style="color:darkgreen">Título postagem</strong>
+                            <br >
+                                @Html.DisplayFor(modelItem => post.Titulo)
+                            <br>
+                        <p style="color:darkblue">
+                                @Html.DisplayFor(modelItem => post.Conteudo)
+                            </p>
+                            
+                            <hr>
+                        </p>
+                        }
+                    <a asp-area="" asp-route-id="@item.Id" asp-controller="Postagens" asp-action="PaginaInicial">clique aqui </a>
+                    e veja os posts relacionados
+                    </p>
+                    <p>
+                        Ou clique aqui e vá para a página de inicial dos
+                        <a asp-area="" asp-route-id="@item.Id" asp-controller="Topicos" asp-action="PaginaInicial">Tópicos...</a>
+                    </p>
+                </div>
+            </div>
+            <br />
+        }
+    </form>
+</div>
+
+*@
+
+
+

@@ -1,0 +1,55 @@
+﻿@model IEnumerable<HundCom_Postagem.Data.Dtos.Posts.ReadPostDto>
+
+@{
+    ViewData["Title"] = "Postagens";
+}
+<div class="row" style="margin-top:60px; text-align:center">
+    <h1>HANCOM - POSTS CADASTRADOS</h1>
+    <br />
+</div>
+
+<div class="form-group" style="margin-top:60px;">
+    <form asp-controller="Postagens" asp-action="PaginaInicial" method="get">
+        <input class="form-group btn-group" type="text" name="searchPosts" placeholder="Buscar..." style="width:40%;">
+        <span class="form-group">
+            <input class="form-group btn btn-success btn-sm"
+                   type="submit"
+                   value="Buscar"
+                   name="searchTopico" />
+        </span> |
+        <a class="form-group btn btn-primary btn-sm" asp-route-id="" asp-area="" asp-controller="Postagens" asp-action="PaginaInicial">Listar Todos</a>
+    </form>
+</div>
+
+<div class="form-group" style="margin-top:50px;">
+    <div class="form-group">
+        <a type="submit" class="btn btn-success btn-sm" asp-area="" asp-controller="Postagens" asp-action="AdicionarPostagem">Adicionar novo post</a>
+        <br />
+    </div>
+    <div class="form-group" style="margin-top:20px;">
+        @foreach (var item in Model)
+        {
+            <div class="card">
+                <div class="card-header">
+                    <h5>Titulo do Post --> @Html.DisplayFor(modelItem => item.Titulo)</h5>                    
+                </div>
+                <div class="card-body">
+                    <p>
+                        @Html.DisplayFor(modelItem => item.Conteudo)
+                    </p>
+                    @foreach (var post in item.Comentarios)
+                    {
+                        <p style="padding-left:20px"> 
+                            Comentario do post -->
+                            @Html.DisplayFor(modelItem => post.Conteudo)
+                            <br>
+                        </p>
+                    }
+                    <a class="btn btn-info" asp-area="" asp-route-id="@item.Id" asp-controller="Comentarios" asp-action="AdicionarComentario">Comentar...</a>
+                    <a class="btn btn-danger" asp-area="" asp-route-id="@item.Id" asp-controller="Topicos" asp-action="DeletarTopico">Excluir este topico...</a>
+                </div>
+            </div>
+            <br />
+        }
+    </div>
+</div>

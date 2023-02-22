@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HundCom_Postagem.Services;
+using HundCom_Postagem.Services.ImplementationServices;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,18 +9,17 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     throw new InvalidOperationException("String de conexão não encontrada.")));
 
 
-//builder.Services.AddDbContext<AppDbContext>(options =>
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("AddDbContext") ??
-//    throw new InvalidOperationException("Connection string 'AddDbContext' not found.")));
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
+builder.Services.AddScoped<ITopicoServices, TopicoServicesImplementation>();
+builder.Services.AddScoped<IPostagemServices, PostagemServicesImplementation>();
+builder.Services.AddScoped<IComentarioServices, ComentarioServicesImplementation>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
-
-
-
-
 
 
 // Configure the HTTP request pipeline.

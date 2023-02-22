@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using HundCom_Postagem.Models.Entities;
+using System.Reflection.Emit;
 
 public class AppDbContext : DbContext
 {
@@ -14,7 +15,7 @@ public class AppDbContext : DbContext
     {
         builder.Entity<Postagem>()
             .HasOne(post => post.Topico)
-            .WithMany(topic => topic.Postagens)
+            .WithMany(topic => topic.ListaPostagens)
             .HasForeignKey(post => post.TopicoId);
 
         builder.Entity<Comentario>()
@@ -23,7 +24,7 @@ public class AppDbContext : DbContext
             .HasForeignKey(comment => comment.PostagemId);
     }
 
-    public DbSet<Topico> Topicos { get; set; } = default!;
-    public DbSet<Postagem> Postagens { get; set; } = default!;
-    public DbSet<Comentario> Comentarios { get; set; } = default!;
+    public DbSet<Topico> Topicos { get; set; }
+    public DbSet<Postagem> Postagens { get; set; }
+    public DbSet<Comentario> Comentarios { get; set; }
 }
