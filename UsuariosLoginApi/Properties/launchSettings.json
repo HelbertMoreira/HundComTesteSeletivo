@@ -4,17 +4,17 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:60359",
-      "sslPort": 44379
+      "applicationUrl": "http://localhost:7050",
+      "sslPort": 44342
     }
   },
   "profiles": {
-    "HundComTeste_Usuarios": {
+    "UsuariosLoginApi": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
-      "applicationUrl": "https://localhost:7080;http://localhost:5149",
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:7209;http://localhost:5052",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -22,7 +22,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
+      "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

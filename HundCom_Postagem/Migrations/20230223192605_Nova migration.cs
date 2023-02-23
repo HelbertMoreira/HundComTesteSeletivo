@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HundCom_Postagem.Migrations
 {
     /// <inheritdoc />
-    public partial class Migrationinicial : Migration
+    public partial class Novamigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +17,9 @@ namespace HundCom_Postagem.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Tema = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Tema = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Usuario = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UsuarioRole = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -52,7 +54,7 @@ namespace HundCom_Postagem.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Conteudo = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Conteudo = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     DataComentario = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PostagemId = table.Column<int>(type: "int", nullable: false)
                 },

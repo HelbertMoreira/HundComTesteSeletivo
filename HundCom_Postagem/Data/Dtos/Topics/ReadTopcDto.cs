@@ -8,8 +8,8 @@ namespace HundCom_Postagem.Data.Dtos.Topics
     {
         
         public int Id { get; set; }
-
         public string? Tema { get; set; }
+        public string? Usuario { get; set; }
 
         public List<ReadPostDto>? ListaPostagem { get; set; }
 

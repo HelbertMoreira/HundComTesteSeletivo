@@ -34,8 +34,8 @@ namespace HundCom_Postagem.Migrations
 
                     b.Property<string>("Conteudo")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<DateTime>("DataComentario")
                         .HasColumnType("datetime2");
@@ -90,6 +90,14 @@ namespace HundCom_Postagem.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Tema")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Usuario")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UsuarioRole")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

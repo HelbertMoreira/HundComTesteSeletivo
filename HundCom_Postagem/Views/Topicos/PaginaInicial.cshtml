@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = "Topicos";
 }
+
+
 <div class="row" style="margin-top:60px; text-align:center">
     <h1>HANCOM - TÓPICOS CADASTRADOS</h1>
     <br />
@@ -23,18 +25,21 @@
 
 <div class="form-group" style="margin-top:50px;">
     <div class="form-group">
-        <a type="submit" class="btn btn-success btn-sm" asp-area="" asp-controller="Topicos" asp-action="AdicionarTopico">Adicionar novo tópico</a>
+        <a type="submit" class="btn btn-success btn-sm" asp-area="" asp-controller="Topicos" asp-action="AdicionarTopico">Adicionar novo tópico</a> | 
+        <a type="submit" class="btn btn-primary btn-sm" asp-area="" asp-controller="Postagens" asp-action="PaginaInicial">Listar todos os POSTS</a>
         <br />
     </div>
     <div class="form-group" style="margin-top:20px;">
         @foreach (var item in Model)
         {            
             <div class="card">
-                <div class="card-header">
-                    <h5>@Html.DisplayFor(modelItem => item.Tema)  -  </h5>
-                    <a type="submit" asp-controller="Postagens" asp-route-id="@item.Id" asp-action="PaginaInicial">
-                        Ver postagens de @Html.DisplayFor(modelItem => item.Tema)
-                    </a>
+                <div class="card-header">                    
+                        <a type="submit" asp-controller="Postagens" asp-route-id="@item.Id" asp-action="PaginaInicial">
+                            <h5>@Html.DisplayFor(modelItem => item.Tema)</h5>
+                        </a>                        
+                        por @Html.DisplayFor(modelItem => item.Usuario) 
+                        <P>
+                    </P>
                 </div>
                 <div class="card-body"> 
                     @foreach (var post in item.ListaPostagem)
@@ -56,3 +61,4 @@
         }
     </div>
 </div>
+

@@ -9,13 +9,15 @@ namespace HundCom_Postagem.Services.ImplementationServices
 {
     public class TopicoServicesImplementation : ITopicoServices
     {
-        private IMapper _mapper;
+        private readonly IMapper _mapper;
         private readonly AppDbContext _context;
+        private readonly AuthenticatedUser _usuario;
 
-        public TopicoServicesImplementation(IMapper mapper, AppDbContext context)
+        public TopicoServicesImplementation(IMapper mapper, AppDbContext context, AuthenticatedUser usuario)
         {
             _mapper = mapper;
             _context = context;
+            _usuario = usuario;
         }       
 
         public List<ReadTopcDto> ListarTodosOsTopicosCadastrados()
@@ -32,6 +34,18 @@ namespace HundCom_Postagem.Services.ImplementationServices
         public ReadTopcDto AdicionaTopico(CreateTopcDto topicoDto)
         {
             Topico topico = _mapper.Map<Topico>(topicoDto);
+            
+            if (!string.IsNullOrEmpty(_usuario.Name))
+            {
+                topico.Usuario = _usuario.Name;
+                topico.UsuarioRole = _usuario.Role;
+            }
+            else
+            {
+                topico.Usuario = "Guest";
+                topico.UsuarioRole = "Convidado";
+            }
+            
             _context.Topicos.Add(topico);
             _context.SaveChanges();
             return _mapper.Map<ReadTopcDto>(topico);

@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HundCom_Postagem", "HundCom_Postagem\HundCom_Postagem.csproj", "{0F2C3397-5962-4898-8741-879A16A888F3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HundComTeste_Usuarios", "HundComTeste_Usuarios\HundComTeste_Usuarios.csproj", "{87E65508-6DC5-4407-A63D-70BED2C00181}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UsuariosLoginApi", "UsuariosLoginApi\UsuariosLoginApi.csproj", "{4C5466FF-719A-438D-8A29-7C4CAD8F033A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{0F2C3397-5962-4898-8741-879A16A888F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F2C3397-5962-4898-8741-879A16A888F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F2C3397-5962-4898-8741-879A16A888F3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{87E65508-6DC5-4407-A63D-70BED2C00181}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{87E65508-6DC5-4407-A63D-70BED2C00181}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{87E65508-6DC5-4407-A63D-70BED2C00181}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{87E65508-6DC5-4407-A63D-70BED2C00181}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C5466FF-719A-438D-8A29-7C4CAD8F033A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C5466FF-719A-438D-8A29-7C4CAD8F033A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C5466FF-719A-438D-8A29-7C4CAD8F033A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C5466FF-719A-438D-8A29-7C4CAD8F033A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
