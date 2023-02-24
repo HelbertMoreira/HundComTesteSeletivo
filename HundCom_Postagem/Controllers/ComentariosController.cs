@@ -5,14 +5,15 @@ using HundCom_Postagem.Services;
 using HundCom_Postagem.Data.Dtos.Posts;
 using HundCom_Postagem.Data.Dtos.Comments;
 using HundCom_Postagem.Models.Entities;
+using HundCom_Postagem.Services.ImplementationServices;
 
 namespace HundCom_Postagem.Controllers
 {
     public class ComentariosController : Controller
     {
-        private IMapper _mapper;
-        private IComentarioServices _services;
-        private IPostagemServices _postagemServices;
+        private readonly IMapper _mapper;
+        private readonly IComentarioServices _services;
+        private readonly IPostagemServices _postagemServices;
 
         public ComentariosController(IMapper mapper, IComentarioServices services, IPostagemServices postagemServices)
         {
@@ -24,12 +25,13 @@ namespace HundCom_Postagem.Controllers
         
         public IActionResult AdicionarComentario(int id)
         {
+            var postagens =_postagemServices.ListarTodosAsPostagens(id, null).Result;
+
             var comentarioModel = new CreateCommentDto()
             {
-                Postagens = _postagemServices.ListarTodosAsPostagensCadastrados(id, null),
+                Postagens = _mapper.Map<List<ReadPostDto>>(postagens),
                 postagemId = id,
-                DataComentario = DateTime.Now
-                
+                DataComentario = DateTime.Now                
             };
             return View(comentarioModel);
         }
@@ -48,6 +50,13 @@ namespace HundCom_Postagem.Controllers
             return RedirectToAction("PaginaInicial", "Postagens", null);
         }
         
+        public IActionResult Delete(int id)
+        {
+            var resultado =  _services.ListarComentariosPorId(id);
+            if (resultado != null)
+                return View(resultado);
+            return View();
+        }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

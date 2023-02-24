@@ -10,6 +10,9 @@ using AutoMapper;
 using HundCom_Postagem.Services;
 using HundCom_Postagem.Data.Dtos.Posts;
 using HundCom_Postagem.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
+using HundCom_Postagem.Data.Dtos.Topics;
 
 namespace HundCom_Postagem.Controllers
 {
@@ -27,17 +30,37 @@ namespace HundCom_Postagem.Controllers
         }
 
         
-        public IActionResult PaginaInicial(int? id, string? searchPosts)
+        public async Task<IActionResult> PaginaInicial(int? id, string? searchPosts)
         {
-            return View(_services.ListarTodosAsPostagensCadastrados(id, searchPosts));
+            return View(await _services.ListarTodosAsPostagens(id, searchPosts));
+        }
+
+        [HttpGet()]
+        [Route("ListaPostagemPaginada")]
+        [Authorize(Roles = "admin, regular")]
+        public async Task<IActionResult> ListaPostagemPaginada(
+            [FromServices] AppDbContext context,
+            [FromRoute] int skip = 0,
+            [FromRoute] int take = 2)
+        {
+            var totalposts = await context
+                .Postagens
+                .AsNoTracking()
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync();
+
+            return View(totalposts);
         }
 
 
         public IActionResult AdicionarPostagem()
-        {            
+        {
+            List<ReadTopcDto> topico = _topicoServices.ListarTodosOsTopicosCadastrados(null, null).Result;
+
             var topicoPostagemViewModel = new TopicosPostagensViewModel()
             {
-                ListaTopicos = _topicoServices.ListarTodosOsTopicosCadastrados()
+                ListaTopicos = _mapper.Map<List<ReadTopcDto>>(topico)
             };
             return View(topicoPostagemViewModel);
         }
@@ -56,7 +79,7 @@ namespace HundCom_Postagem.Controllers
         {
             if (id == null) return NotFound();
 
-            var topico = _mapper.Map<ReadPostDto>(_services.ListarTodosAsPostagensCadastrados(id, null));
+            var topico = _mapper.Map<ReadPostDto>(_services.ListarTodosAsPostagens(id, null));
 
             if (topico != null)            
                 return View(topico);            
@@ -77,13 +100,8 @@ namespace HundCom_Postagem.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 if (!PostagemExists(postagem.Id))
-                {
                     return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                throw;                
             }
             return RedirectToAction(nameof(Index));
 
@@ -93,10 +111,9 @@ namespace HundCom_Postagem.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)            
-                return NotFound();            
+                return NotFound();
 
-            var topico = _services.ListarTodosAsPostagensCadastrados(id, null)
-                .FirstOrDefault(m => m.Id == id);
+            var topico = _services.ListarTodosAsPostagens(id, null);
 
             if (topico == null)            
                 return NotFound(); 
@@ -113,8 +130,8 @@ namespace HundCom_Postagem.Controllers
         }
 
         private bool PostagemExists(int id)
-        {            
-            return _services.ListarTodosAsPostagensCadastrados(id, null) != null ? true: false;
+        {
+            return _services.ListarTodosAsPostagens(id, null) is null? false : true;
         }
     }
 }

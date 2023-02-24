@@ -22,7 +22,7 @@ namespace HundCom_Postagem.Controllers
 
         public IActionResult Index()
         {
-            return View(_topicoServices.ListarTodosOsTopicosCadastrados());
+            return View(_topicoServices.ListarTodosOsTopicosCadastrados(null, null));
         }
 
 

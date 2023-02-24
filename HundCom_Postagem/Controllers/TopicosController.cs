@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using HundCom_Postagem.Services;
 using HundCom_Postagem.Data.Dtos.Topics;
 using Microsoft.AspNetCore.Authorization;
-using System.Data;
-using FluentResults;
+using Microsoft.EntityFrameworkCore;
 
 namespace HundCom_Postagem.Controllers
 {
@@ -20,16 +18,36 @@ namespace HundCom_Postagem.Controllers
             _services = services;
         }
 
-        
-        public IActionResult PaginaInicial()
+
+        public async Task<IActionResult> PaginaInicial(int? idTopico, string? searchTopico)
         {
-            return View(_services.ListarTodosOsTopicosCadastrados());
+            return View(await _services.ListarTodosOsTopicosCadastrados(idTopico, searchTopico));
         }
 
-        
+
+        [HttpGet()]
+        [Route("ListaTopicosPaginada")]
+        [Authorize(Roles = "admin, regular")]
+        public async Task<IActionResult> ListaTopicosPaginada(
+            [FromServices] AppDbContext context,
+            [FromRoute] int skip = 0,
+            [FromRoute] int take = 2)
+        {
+            var totalTopicos = await context
+                .Topicos
+                .AsNoTracking()
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync();
+
+            return View(totalTopicos);
+        }
+
+
         public async Task<IActionResult> BuscarTopicoPorNome(string searchTopico)
-        {  
-            return View("PaginaInicial", await _services.BuscarTopicoCadastradosPorNome(searchTopico));
+        {
+            var result = await _services.ListarTodosOsTopicosCadastrados(null, searchTopico);
+            return View("PaginaInicial", result);
         }
 
         public IActionResult AdicionarTopico()
@@ -37,53 +55,49 @@ namespace HundCom_Postagem.Controllers
             return View();
         }
 
-
-        [HttpPost]       
+        [HttpPost]
         public IActionResult AdicionarTopico(CreateTopcDto topico)
-        {            
+        {
             _services.AdicionaTopico(topico);
             return RedirectToAction(nameof(PaginaInicial));
         }
 
-        public IActionResult DeletarTopico(int id)
-        {
-            var topico = _services
-                .ListarTodosOsTopicosCadastrados()
-                .FirstOrDefault(m => m.Id == id);
 
-            if (topico == null)
+        public async Task<IActionResult> DeletarTopico(int id)
+        {
+            var topicos = await _services.ListarTodosOsTopicosCadastrados(null, null);
+
+            ReadTopcDto topicoDto = _mapper.Map<ReadTopcDto>(topicos.FirstOrDefault(x => x.Id == id));
+
+            if (topicoDto == null)
                 return NotFound();
-            return View(topico);
+            return View(topicoDto);
         }
 
-        
+
         [HttpPost, ActionName("DeletarTopico")]
         public IActionResult DeleteConfirmed(int id)
         {
-            var topico = _services.BuscarTopicoCadastradosPorId(id);
-            
-            if (topico != null)
-            {
-                _services.DeletaTopicoCadastrado(topico.Id);                
-                return RedirectToAction(nameof(PaginaInicial));
-            }
+            _services.DeletaTopicoCadastrado(id);
             return RedirectToAction(nameof(PaginaInicial));
         }
 
 
-        // Rotas que retornam objetos JSON para teste no postman
-        [HttpPost]
-        [Authorize(Roles = "admin")]
-        public ReadTopcDto AdicionarNovoTopico(CreateTopcDto topico)
-        {
-            return _services.AdicionaTopico(topico);
-        }
+        //Rotas que retornam objetos JSON para teste no postman
+        //[HttpPost]
+        //[Authorize(Roles = "admin")]
+        //public ReadTopcDto AdicionarTopicoNovo(CreateTopcDto topico)
+        //{
 
-        [HttpGet]
-        [Authorize(Roles = "admin, regular")]
-        public async Task<List<ReadTopcDto>> BuscarTopicoPorNomeNovo(string searchTopico)
-        {
-            return await _services.BuscarTopicoCadastradosPorNome(searchTopico);
-        }
+        //    return _services.AdicionaTopico(topico);
+        //}
+
+
+        //[HttpGet]
+        //[Authorize(Roles = "admin, regular")]
+        //public async Task<List<ReadTopcDto>> BuscarTopicoPorNomeNovo(string searchTopico)
+        //{
+        //    return await _services.BuscarTopicoCadastradosPorNome(searchTopico);
+        //}
     }
 }

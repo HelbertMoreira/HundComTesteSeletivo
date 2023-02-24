@@ -17,6 +17,7 @@ namespace HundCom_Postagem.Models.Entities
         [MaxLength(150, ErrorMessage = "São permitidos apenas comentários com no máximo 150 caracteres")]
         public string Conteudo { get; set; }
 
+        public string Autor { get; set; }
         public DateTime DataPostagem { get; set; }
 
         

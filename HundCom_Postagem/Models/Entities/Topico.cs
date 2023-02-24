@@ -13,9 +13,9 @@ namespace HundCom_Postagem.Models.Entities
         [Required(ErrorMessage = "O nome para o tópico é obrigatório")]
         public string? Tema { get; set; }
 
-        public string Usuario { get; set; }
+        public string Autor { get; set; }
 
-        public string UsuarioRole { get; set; }
+        public string AutorRole { get; set; }
 
         public virtual List<Postagem>? ListaPostagens { get; set; }
     }

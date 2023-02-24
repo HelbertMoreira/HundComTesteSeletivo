@@ -32,19 +32,38 @@
         {
             <div class="card">
                 <div class="card-header">
-                    <h5>Titulo do Post --> @Html.DisplayFor(modelItem => item.Titulo)</h5>                    
+                    <h5>Titulo do Post --> @Html.DisplayFor(modelItem => item.Titulo)</h5>
                 </div>
                 <div class="card-body">
-                    <p>
-                        @Html.DisplayFor(modelItem => item.Conteudo)
-                    </p>
+                    
                     @foreach (var post in item.Comentarios)
                     {
-                        <p style="padding-left:20px"> 
-                            Comentario do post -->
-                            @Html.DisplayFor(modelItem => post.Conteudo)
+                        @*<p style="padding-left:20px">
+                Comentario do post -->
+                @Html.DisplayFor(modelItem => post.Conteudo)
+                <br>
+                </p>*@
+                        <div class="card-text">
+                            <div class="row">
+                                <p>
+                                    Por -> @Html.DisplayFor(modelItem => post.Autor) em @Html.DisplayFor(modelItem => post.DataComentario)
+                                </p>
+                                <span>
+                                    @Html.DisplayFor(modelItem => post.Conteudo)
+                                </span>
+                            </div>
                             <br>
-                        </p>
+                            <div style="align-items:flex-end">
+                                <a class="btn btn-sm-info btn-sm"
+                                    asp-area=""
+                                    asp-route-id="@item.Id"
+                                    asp-controller="Comentarios"
+                                    asp-action="Delete">
+                                    Excluir
+                                </a>
+                            </div>
+                            <hr>
+                        </div>
                     }
                     <a class="btn btn-info" asp-area="" asp-route-id="@item.Id" asp-controller="Comentarios" asp-action="AdicionarComentario">Comentar...</a>
                     <a class="btn btn-danger" asp-area="" asp-route-id="@item.Id" asp-controller="Postagem" asp-action="Delete">Excluir este Post...</a>

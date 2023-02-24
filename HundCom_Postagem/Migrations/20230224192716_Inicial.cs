@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HundCom_Postagem.Migrations
 {
     /// <inheritdoc />
-    public partial class Novamigration : Migration
+    public partial class Inicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,8 +18,8 @@ namespace HundCom_Postagem.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Tema = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Usuario = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UsuarioRole = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Autor = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AutorRole = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -34,6 +34,7 @@ namespace HundCom_Postagem.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Titulo = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     Conteudo = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    Autor = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DataPostagem = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TopicoId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -55,6 +56,7 @@ namespace HundCom_Postagem.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Conteudo = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    Autor = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DataComentario = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PostagemId = table.Column<int>(type: "int", nullable: false)
                 },

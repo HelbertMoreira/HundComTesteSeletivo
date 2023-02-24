@@ -2,7 +2,9 @@
 using FluentResults;
 using HundCom_Postagem.Data.Dtos.Posts;
 using HundCom_Postagem.Models.Entities;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace HundCom_Postagem.Services.ImplementationServices
 {
@@ -10,14 +12,17 @@ namespace HundCom_Postagem.Services.ImplementationServices
     {
         private IMapper _mapper;
         private readonly AppDbContext _context;
+        private readonly AuthenticatedUser _usuario;
 
-        public PostagemServicesImplementation(IMapper mapper, AppDbContext context)
+        public PostagemServicesImplementation(IMapper mapper, AppDbContext context, AuthenticatedUser usuario)
         {
             _mapper = mapper;
             _context = context;
+            _usuario = usuario;
         }
 
-        public List<ReadPostDto> ListarTodosAsPostagensCadastrados(int? id, string? searchPosts)
+
+        public async Task<List<ReadPostDto>> ListarTodosAsPostagens(int? id, string? searchPosts)
         {
             var posts = from obj
                           in _context.Postagens
@@ -29,63 +34,50 @@ namespace HundCom_Postagem.Services.ImplementationServices
             if (id != null)
                 posts = posts.Where(x => x.TopicoId == id);
 
-            var teste = posts
+            var postagens = await posts
                 .Include(x => x.Topico)
                 .Include(x => x.Comentarios)
-                .ToList();
+                .ToListAsync();
 
-            return _mapper.Map<List<ReadPostDto>>(posts
-                .Include(x => x.Topico)
-                .Include(x => x.Comentarios)
-                .ToList());
+            return _mapper.Map<List<ReadPostDto>>(postagens);
         }       
 
-        public ReadPostDto AdicionaPostagem(CreatePostDto postagemDto)
+        public Task<ReadPostDto> AdicionaPostagem(CreatePostDto postagemDto)
         {
-            Postagem postagem = _mapper.Map<Postagem>(postagemDto);
+            Postagem postagem = _mapper.Map<Postagem>(postagemDto);            
+
+            var usuario = string.IsNullOrEmpty(_usuario.Name) ? "Visitante": _usuario.Name;
             postagem.DataPostagem = DateTime.Now;
+            postagem.Autor = usuario;
+
             _context.Postagens.Add(postagem);
             _context.SaveChanges();
-            return _mapper.Map<ReadPostDto>(postagem);
+
+            return _mapper.Map<Task<ReadPostDto>>(postagem);
         }
 
         public Result AtualizarPostagemCadastrada(int id, UpdatePostDto updatePostDto)
         {
-            Postagem postagem = BuscarPostagemCadastradaPorId(id);
+            var postagem = ListarTodosAsPostagens(id, null);
+
             if (postagem == null)
-            {
-                return Result.Fail("Postagem não encontrado");
-            }
-            //_context.Update(topico);
-            _mapper.Map(updatePostDto, postagem);
+                return Result.Fail("Postagem não encontrado");            
+
+            _mapper.Map<Postagem>(postagem);
             _context.SaveChanges();
             return Result.Ok();
-        }
-
-        private Postagem BuscarPostagemCadastradaPorId(int id)
-        {
-            var postagem = _context.Postagens.FirstOrDefault(m => m.Id == id);
-
-            if (postagem == null)  
-                return null;
-            return postagem;
         }
 
         public Result DeletaPostagemCadastrado(int id)
         {
-            Postagem postagem = BuscarPostagemCadastradaPorId(id);
-            if (postagem == null)
-            {
+            var postagem = ListarTodosAsPostagens(id, null);
+
+            if (postagem == null)            
                 return Result.Fail("Postagem não encontrada");
-            }
+            
             _context.Remove(postagem);
             _context.SaveChanges();
             return Result.Ok();
-        }
-
-        public IEnumerable<ReadPostDto> ListarPostagemCadastradosPorNome(string nomePostagem)
-        {
-            return _mapper.Map<List<ReadPostDto>>(_context.Postagens.Where(p => p.Conteudo.Contains(nomePostagem)));
         }
     }
 }

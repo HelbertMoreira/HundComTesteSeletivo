@@ -18,7 +18,8 @@ namespace UsuariosLoginApi.Services
 
         public CadastroService(IMapper mapper,
             UserManager<CustomIdentityUser> userManager,
-            EmailService emailService, RoleManager<IdentityRole<int>> roleManager)
+            EmailService emailService, 
+            RoleManager<IdentityRole<int>> roleManager)
         {
             _mapper = mapper;
             _userManager = userManager;
@@ -57,7 +58,7 @@ namespace UsuariosLoginApi.Services
                 .Users
                 .FirstOrDefault(u => u.Id == request.UsuarioId);
 
-            var codigo = HttpUtility.UrlDecode(request.CodigoDeAtivacao);
+            var codigo = request.CodigoDeAtivacao;
 
             var identityResult = _userManager
                 .ConfirmEmailAsync(identityUser, codigo).Result;

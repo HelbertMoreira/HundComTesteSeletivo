@@ -5,9 +5,8 @@ namespace HundCom_Postagem.Services
 {
     public interface IPostagemServices
     {
-        ReadPostDto AdicionaPostagem(CreatePostDto postagemDto);
-        List<ReadPostDto> ListarTodosAsPostagensCadastrados(int? id, string? searchPosts);
-        IEnumerable<ReadPostDto> ListarPostagemCadastradosPorNome(string nomePostagem);
+        Task<ReadPostDto> AdicionaPostagem(CreatePostDto postagemDto);
+        Task<List<ReadPostDto>> ListarTodosAsPostagens(int? id, string? searchPosts);
         Result AtualizarPostagemCadastrada(int id, UpdatePostDto postagemDto);
         Result DeletaPostagemCadastrado(int id);
     }

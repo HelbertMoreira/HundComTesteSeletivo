@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FluentResults;
-using HundCom_Postagem.Data.Dtos.Posts;
 using HundCom_Postagem.Data.Dtos.Topics;
 using HundCom_Postagem.Models.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -20,59 +19,44 @@ namespace HundCom_Postagem.Services.ImplementationServices
             _usuario = usuario;
         }       
 
-        public List<ReadTopcDto> ListarTodosOsTopicosCadastrados()
+        public async Task<List<ReadTopcDto>> ListarTodosOsTopicosCadastrados(int? idTopico, string? searchTopico)
         {
-            var topicos = from obj
+            var topicos = from topico
                           in _context.Topicos
-                        select obj;
+                        select topico;
 
-            return _mapper.Map<List<ReadTopcDto>>(topicos
+            if (!string.IsNullOrEmpty(searchTopico))
+                topicos = topicos.Where(x => x.Tema!.Contains(searchTopico));
+
+            if (idTopico != null)
+                topicos = topicos.Where(x => x.Id == idTopico);
+
+            List<Topico> result = await topicos
                 .Include(x => x.ListaPostagens)
-                .ToList());
+                .ToListAsync();
+
+            return _mapper.Map<List<ReadTopcDto>>(result);
         }
 
-        public ReadTopcDto AdicionaTopico(CreateTopcDto topicoDto)
+        public async Task<ReadTopcDto> AdicionaTopico(CreateTopcDto topicoDto)
         {
-            Topico topico = _mapper.Map<Topico>(topicoDto);
-            
+            var topico = _mapper.Map<Topico>(topicoDto);
+
             if (!string.IsNullOrEmpty(_usuario.Name))
             {
-                topico.Usuario = _usuario.Name;
-                topico.UsuarioRole = _usuario.Role;
+                topico.Autor = _usuario.Name;
+                topico.AutorRole = _usuario.Role;
             }
             else
             {
-                topico.Usuario = "Guest";
-                topico.UsuarioRole = "Convidado";
+                topico.Autor = "Visitante";
+                topico.AutorRole = "Visitante";
             }
             
             _context.Topicos.Add(topico);
             _context.SaveChanges();
             return _mapper.Map<ReadTopcDto>(topico);
         }
-
-        public ReadTopcDto BuscarTopicoCadastradosPorId(int id)
-        {
-            return ListarTodosOsTopicosCadastrados().FirstOrDefault(x => x.Id == id);
-        }
-
-        public async Task<List<ReadTopcDto>> BuscarTopicoCadastradosPorNome(string nomeTopico)
-        {
-            var topicos = from obj
-                          in _context.Topicos
-                          select obj;
-
-            if (!string.IsNullOrEmpty(nomeTopico))
-            {
-                topicos = topicos.Where(x => x.Tema!.Contains(nomeTopico));
-            }
-
-            return _mapper.Map<List<ReadTopcDto>>(await topicos
-                .Include(x => x.ListaPostagens)
-                .ToListAsync());
-        }
-           
-        
 
         public Result DeletaTopicoCadastrado(int id)
         {

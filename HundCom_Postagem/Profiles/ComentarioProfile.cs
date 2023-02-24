@@ -9,9 +9,14 @@ namespace HundCom_Postagem.Profiles
         public ComentarioProfile()
         {
             CreateMap<CreateCommentDto, Comentario>();
-            CreateMap<Comentario, ReadCommentDto>().ReverseMap();
-            //CreateMap<List<Comentario>, List<ReadCommentDto>>().ReverseMap();
             CreateMap<UpdateCommentDto, Comentario>();
+            CreateMap<Comentario, ReadCommentDto>();
+                //.ForMember(dest => dest.Conteudo, m => m.MapFrom(src => src.Conteudo))
+                //.ForMember(dest => dest.Autor, m => m.MapFrom(src => src.Autor))
+                //.ForMember(dest => dest.Conteudo, m => m.MapFrom(src => src.Conteudo))
+                //.ForMember(dest => dest.DataComentario, m => m.MapFrom(src => src.DataComentario))
+                //.ForMember(dest => dest.Postagem, m => m.MapFrom(src => src.Postagem))
+                //.ForMember(dest => dest.Id, m => m.MapFrom(src => src.Id));
         }
     }
 }

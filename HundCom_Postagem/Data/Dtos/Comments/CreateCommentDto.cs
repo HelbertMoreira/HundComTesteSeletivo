@@ -5,7 +5,8 @@ namespace HundCom_Postagem.Data.Dtos.Comments
 {
     public class CreateCommentDto
     {
-        public string Conteudo { get; set; } 
+        public string Conteudo { get; set; }
+        public string Autor { get; set; }
         public DateTime DataComentario { get; set; }
         public List<ReadPostDto> Postagens { get; set; }
         public int postagemId { get; set; } 
