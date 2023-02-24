@@ -62,7 +62,7 @@ namespace HundCom_Postagem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            return RedirectToAction(nameof(AdicionarComentario));
+            return RedirectToAction("PaginaInicial", "Postagens", null);
         }
     }
 }
