@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using HundCom_Postagem.Models.Entities;
 using AutoMapper;
 using HundCom_Postagem.Services;
 using HundCom_Postagem.Data.Dtos.Posts;
 using HundCom_Postagem.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using System.Data;
 using HundCom_Postagem.Data.Dtos.Topics;
 
 namespace HundCom_Postagem.Controllers
@@ -55,7 +48,7 @@ namespace HundCom_Postagem.Controllers
 
 
         public IActionResult AdicionarPostagem()
-        {
+        { 
             List<ReadTopcDto> topico = _topicoServices.ListarTodosOsTopicosCadastrados(null, null).Result;
 
             var topicoPostagemViewModel = new TopicosPostagensViewModel()

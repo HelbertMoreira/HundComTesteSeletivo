@@ -12,7 +12,7 @@ namespace HundCom_Postagem.Services.ImplementationServices
         private readonly AppDbContext _context;
         private readonly AuthenticatedUser _usuario;
 
-        public ComentarioServicesImplementation(IMapper mapper, AppDbContext context, AuthenticatedUser usuario = null)
+        public ComentarioServicesImplementation(IMapper mapper, AppDbContext context, AuthenticatedUser usuario)
         {
             _mapper = mapper;
             _context = context;

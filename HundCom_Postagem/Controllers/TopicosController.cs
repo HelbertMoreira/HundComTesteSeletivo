@@ -4,6 +4,9 @@ using HundCom_Postagem.Services;
 using HundCom_Postagem.Data.Dtos.Topics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using HundCom_Postagem.Models.ViewModels;
+using AutoMapper.QueryableExtensions;
+using HundCom_Postagem.Services.ImplementationServices;
 
 namespace HundCom_Postagem.Controllers
 {
@@ -11,49 +14,53 @@ namespace HundCom_Postagem.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ITopicoServices _services;
+        private readonly AppDbContext _context;
+        private readonly AuthenticatedUser _usuario;
 
-        public TopicosController(IMapper mapper, ITopicoServices services)
+
+        public TopicosController(IMapper mapper, ITopicoServices services, AppDbContext context, AuthenticatedUser usuario)
         {
             _mapper = mapper;
             _services = services;
+            _context = context;
+            _usuario = usuario;
         }
 
 
-        public async Task<IActionResult> PaginaInicial(int? idTopico, string? searchTopico)
+        public async Task<IActionResult> PaginaInicial(int? pageNumber)
         {
-            return View(await _services.ListarTodosOsTopicosCadastrados(idTopico, searchTopico));
+            var usuario = _usuario.Name;
+
+            int pageSize = 2;
+
+            var topicoQueryable = _context.Topicos
+                .Include(x => x.ListaPostagens)
+                .ProjectTo<ReadTopcDto>(_mapper.ConfigurationProvider)
+                .AsQueryable();
+
+            return View(await ListaPaginada<ReadTopcDto>.CreateAsync(topicoQueryable, pageNumber ?? 1, pageSize));
         }
 
 
-        [HttpGet()]
-        [Route("ListaTopicosPaginada")]
-        [Authorize(Roles = "admin, regular")]
-        public async Task<IActionResult> ListaTopicosPaginada(
-            [FromServices] AppDbContext context,
-            [FromRoute] int skip = 0,
-            [FromRoute] int take = 2)
+        public async Task<IActionResult> BuscarTopicoPorNome(string searchTopico, int? pageNumber)
         {
-            var totalTopicos = await context
-                .Topicos
-                .AsNoTracking()
-                .Skip(skip)
-                .Take(take)
-                .ToListAsync();
+            int pageSize = 2;
 
-            return View(totalTopicos);
+            var result = _context.Topicos
+                    .Include(x => x.ListaPostagens)
+                    .Where(x => x.Tema!.Contains(searchTopico))
+                    .ProjectTo<ReadTopcDto>(_mapper.ConfigurationProvider)
+            .AsQueryable(); ;
+
+            return View("PaginaInicial", await ListaPaginada<ReadTopcDto>.CreateAsync(result, pageNumber ?? 1, pageSize));
         }
 
-
-        public async Task<IActionResult> BuscarTopicoPorNome(string searchTopico)
-        {
-            var result = await _services.ListarTodosOsTopicosCadastrados(null, searchTopico);
-            return View("PaginaInicial", result);
-        }
 
         public IActionResult AdicionarTopico()
         {
             return View();
         }
+
 
         [HttpPost]
         public IActionResult AdicionarTopico(CreateTopcDto topico)
@@ -84,20 +91,22 @@ namespace HundCom_Postagem.Controllers
 
 
         //Rotas que retornam objetos JSON para teste no postman
-        //[HttpPost]
-        //[Authorize(Roles = "admin")]
-        //public ReadTopcDto AdicionarTopicoNovo(CreateTopcDto topico)
-        //{
+        [HttpPost]
+        [Authorize(Roles = "admin")]
+        public async Task<ReadTopcDto> AdicionarTopicoNovo(CreateTopcDto topico)
+        {
+            var usuario = _usuario.Name;
+            return await _services.AdicionaTopico(topico);
+        }
 
-        //    return _services.AdicionaTopico(topico);
-        //}
 
+        [HttpGet]
+        [Authorize(Roles = "admin, regular")]
+        public async Task<List<ReadTopcDto>> BuscarTopicoPorNomeNovo(string searchTopico)
+        {
+            var usuario = _usuario.Name;
 
-        //[HttpGet]
-        //[Authorize(Roles = "admin, regular")]
-        //public async Task<List<ReadTopcDto>> BuscarTopicoPorNomeNovo(string searchTopico)
-        //{
-        //    return await _services.BuscarTopicoCadastradosPorNome(searchTopico);
-        //}
+            return await _services.ListarTodosOsTopicosCadastrados(null, searchTopico);
+        }
     }
 }

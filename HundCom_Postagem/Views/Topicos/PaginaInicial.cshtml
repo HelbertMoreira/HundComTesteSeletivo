@@ -1,9 +1,14 @@
-﻿@model List<HundCom_Postagem.Data.Dtos.Topics.ReadTopcDto>
+﻿@using HundCom_Postagem.Models.ViewModels;
+@model ListaPaginada<HundCom_Postagem.Data.Dtos.Topics.ReadTopcDto>
 
 @{
     ViewData["Title"] = "Topicos";
 }
 
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
 
 <div class="row" style="margin-top:60px; text-align:center">
     <h1>HANCOM - TÓPICOS CADASTRADOS</h1>
@@ -33,20 +38,14 @@
         @foreach (var item in Model)
         {
             <div class="card">
-                <div class="card-header">                    
+                <div class="card-header">
                     <P>
-                        <h5>@Html.DisplayFor(modelItem => item.Tema)</h5>
+                        Tópico - <h5>@Html.DisplayFor(modelItem => item.Tema)</h5>
                         por @Html.DisplayFor(modelItem => item.Autor)
                     </P>
-                    <a type="submit" 
-                        class="btn-sm btn-info" 
-                        asp-controller="Postagens" 
-                        asp-route-id="@item.Id" 
-                        asp-action="PaginaInicial">
-                        Ir!
-                    </a>
+
                 </div>
-                <div class="card-body">
+                <div class="card-body">                                        
                     @foreach (var post in item.ListaPostagem)
                     {
                         <p>
@@ -58,11 +57,29 @@
                         </p>
                         <hr>
                     }
-                    <a class="btn btn-danger" asp-area="" asp-route-id="@item.Id" asp-controller="Topicos" asp-action="DeletarTopico">Excluir este topico...</a>
+
+                    <a class="btn-sm btn-danger" asp-area="" asp-route-id="@item.Id" asp-controller="Topicos" asp-action="DeletarTopico">
+                        Excluir este topico...
+                    </a> | 
+                    <a type="submit" class="btn-sm btn-info" asp-controller="Postagens" asp-route-id="@item.Id" asp-action="PaginaInicial">
+                        Listar todos!
+                    </a>
                 </div>
             </div>
             <br />
-        }
+        }<a asp-action="PaginaInicial"
+            asp-route-sortOrder="@ViewData["CurrentSort"]"
+            asp-route-pageNumber="@(Model.PageIndex - 1)"
+            asp-route-currentFilter="@ViewData["CurrentFilter"]"
+            class="btn btn-default @prevDisabled">
+            Anterior
+        </a>
+        <a asp-action="PaginaInicial"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-route-pageNumber="@(Model.PageIndex + 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn btn-default @nextDisabled">
+            Próxima
+        </a>
     </div>
 </div>
-

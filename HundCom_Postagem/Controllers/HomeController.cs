@@ -1,10 +1,8 @@
 ﻿using HundCom_Postagem.Models;
-using HundCom_Postagem.Models.Entities;
 using HundCom_Postagem.Services;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using UsuariosLoginApi.Services;
 
 namespace HundCom_Postagem.Controllers
 {
@@ -24,7 +22,7 @@ namespace HundCom_Postagem.Controllers
         {
             return View(_topicoServices.ListarTodosOsTopicosCadastrados(null, null));
         }
-
+        
 
         public IActionResult Privacy()
         {

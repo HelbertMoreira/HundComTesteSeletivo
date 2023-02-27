@@ -17,6 +17,7 @@ namespace HundCom_Postagem.Models.Entities
 
         public string AutorRole { get; set; }
 
+        [JsonIgnore]
         public virtual List<Postagem>? ListaPostagens { get; set; }
     }
 }

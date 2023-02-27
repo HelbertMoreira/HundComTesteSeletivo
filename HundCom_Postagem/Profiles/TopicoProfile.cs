@@ -17,7 +17,7 @@ namespace HundCom_Postagem.Profiles
             CreateMap<ReadTopcDto, Topico>();
             CreateMap<UpdateTopcDto, Topico>();
 
-            
+            CreateMap<IQueryable<Topico>, IQueryable<ReadTopcDto>>();
                 
         }
     }
